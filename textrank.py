@@ -24,7 +24,7 @@ def sentence_similarity(sentences, stop_word_language=None):
     - character n-grams
     """
     stop_words = STOP_WORDS.get(stop_word_language, None)
-    vectorizer = TfidfVectorizer(analyzer='char_wb', min_df=0.05, max_df=0.5, ngram_range=(1, 10), stop_words=stop_words)
+    vectorizer = TfidfVectorizer(analyzer='char_wb', min_df=0.05, max_df=0.5, ngram_range=(3, 10), stop_words=stop_words)
     vectors = vectorizer.fit_transform(sentences)
     similarity = metrics.pairwise.cosine_similarity(vectors, vectors)
     return similarity
@@ -59,6 +59,14 @@ def compute_rank_eigenvector(weights):
     ind = eigenvalue.argmax()
     largest_vector = np.abs(eigenvector[:, ind])
     return (largest_vector - largest_vector.min()) / (largest_vector.max() - largest_vector.min())
+
+
+def local_connections(n, m, width):
+    """Local connections filter"""
+    index = np.eye(n, m)
+    for i in range(width):
+        index += np.eye(n, m, i+1) + np.eye(n, m, -i-1)
+    return index
 
 
 def summarize_wiki(page, language='nl', n_input_sentences=None, sort=False,
