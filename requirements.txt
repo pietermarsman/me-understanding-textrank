@@ -1,7 +1,0 @@
-ipykernel
-pandas
-gensim
-plotnine
-unidecode
-sklearn
-termcolor
