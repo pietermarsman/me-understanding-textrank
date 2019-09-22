@@ -37,7 +37,7 @@ def edge_weights(similarity, d=0.85):
     """
     weights = similarity
     np.fill_diagonal(weights, 0)
-    weights = normalize(weights, 'l1')
+    weights = normalize(weights, 'l1', axis=0)
     weights = (1 - d) / weights.shape[0] + d * weights
     return weights
 
@@ -55,7 +55,7 @@ def compute_rank_naive(weights, steps=100):
 
 def compute_rank_eigenvector(weights):
     """Compute rank by eigenvector decomposition"""
-    eigenvalue, eigenvector = np.linalg.eig(weights.T)
+    eigenvalue, eigenvector = np.linalg.eig(weights)
     ind = eigenvalue.argmax()
     largest_vector = np.abs(eigenvector[:, ind])
     return (largest_vector - largest_vector.min()) / (largest_vector.max() - largest_vector.min())
